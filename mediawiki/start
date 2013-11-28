@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Make sure /opt/mediawiki exists!
+
+ID=$(docker run -p :80 -v /opt/mediawiki:/data -d net127/mediawiki /usr/bin/mediawiki-start)
+IPPORT=$(docker port $ID 80)
+PORT=$(echo $IPPORT | cut -d: -f2)
+sleep 3;
+echo "Container ID: $ID"
+echo "Port: $PORT"
