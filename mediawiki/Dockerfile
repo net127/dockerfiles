@@ -1,12 +1,29 @@
-from	ubuntu:12.04
+# Mediawiki 1.21.2
+#
+#  forked from nickstenning/dockerfiles
+
+FROM	ubuntu:12.04
+MAINTAINER Glenn Powers "glenn@net127.com"
+
+# Get ping
+RUN apt-get install ping
+
+# Copy the files into the container
+ADD ./apt-proxy-check.sh /tmp/
+
+RUN chmod 755 /tmp/apt-proxy-check.sh
+
+# Check for a local apt-cache
+RUN /tmp/apt-proxy-check.sh
 
 # Configure apt
 run	echo 'deb http://us.archive.ubuntu.com/ubuntu/ precise universe' >> /etc/apt/sources.list
-run	apt-get -y update
+run	apt-get update
+run	apt-get -y upgrade
 
 # Install prereqs
 run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor nginx-light php5-fpm php5-intl php5-mysql php5-
-run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y php-apc php5-gd php5-intl php5-mysqlnd php5-pgsql
+run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y php-apc php5-gd php5-intl php5-mysqlnd php5-pgsql mysql-server
 
 # Add system service config
 add	./nginx.conf /etc/nginx/nginx.conf
